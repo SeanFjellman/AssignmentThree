@@ -72,20 +72,28 @@ app.post("/steamStore", async (req, res) => {
     }
   });
   
-  // PUT: Update an existing product
   app.put("/steamStore/:id", async (req, res) => {
     try {
       const steamStoreId = parseInt(req.params.id);
-      const updatedProduct = req.body; // Get the updated product data from the request body
-      console.log("Steam Store ID to update:", steamStoreId);
+      let updatedProduct = req.body;
+      
+      // Remove the _id field from the update object if it exists
+      if (updatedProduct._id) {
+        delete updatedProduct._id;
+      }
+      
+      console.log("Attempting to update product ID:", steamStoreId);
+      console.log("Update data:", updatedProduct);
+  
       await client.connect();
-      console.log("Node connected successfully to MongoDB");
       db = client.db(dbName);
       const query = { "id": steamStoreId };
       const updateResult = await db.collection("steamStore").updateOne(query, { $set: updatedProduct });
+  
       console.log("Update result:", updateResult);
       if (updateResult.modifiedCount === 0) {
-        res.status(404).send("Not Found");
+        console.log("No document found with ID:", steamStoreId);
+        res.status(404).send("Product not found");
       } else {
         res.status(200).send("Product updated successfully");
       }
@@ -94,6 +102,7 @@ app.post("/steamStore", async (req, res) => {
       res.status(500).send("Internal Server Error");
     }
   });
+  
   
   // DELETE: Delete a product
   app.delete("/steamStore/:id", async (req, res) => {

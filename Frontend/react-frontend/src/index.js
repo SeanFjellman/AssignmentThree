@@ -1,12 +1,12 @@
+// index.js
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import Frontend from './frontend'; // Import your Frontend component
+import ReactDOM from 'react-dom/client';
+import App from './App';
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
   <React.StrictMode>
-    <Frontend /> {/* Render your Frontend component */}
-  </React.StrictMode>,
-  document.getElementById('root')
+    <App />
+  </React.StrictMode>
 );
-
